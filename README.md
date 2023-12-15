@@ -28,4 +28,7 @@ npx create-react-app task-list
 
 //iniciar dentro da pasta
 npm start
+
+//executar o servidor
+node app.js
 ```
