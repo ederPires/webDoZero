@@ -41,5 +41,73 @@ router.get("/tasks/:id", async(req,res) =>{
 });
 
 //Inserindo nova tarefa
+router.post("/task", async (req,res) => {
+  try {
+    const task = new Task({
+      description: req.body.description,
+    });
+      await task.save();
+      res.status(201).json({
+        success:true,
+        message: "Tarefa criada com sucesso!",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success:false,
+      message: error.message,
+    });
+  }
+});
+
+//Atualizando uma tarefa
+router.put('/tasks/:id', async (req,res)=> {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if(!task){
+      res.status(400).json({
+        success:false,
+        message:'A Tarefa que você quer atualizar não existe',
+      });
+      } else {
+        await task.update({
+          description: req.body.description,
+        });
+        res.json({
+          success:true,
+          message:"Tarefa atualizada com sucesso!",
+        })
+      }
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message:error.message,
+    })
+  }
+});
+
+//Excluindo uma tarefa
+router.delete('/tasks/:id',async (req,res)=>{
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if(!task){
+      res.status(404).json({
+        success: false,
+        message:"Tarefa não encontrada",
+      });
+    } else {
+      await task.destroy();
+      res.json({
+        success: true,
+        message:"Tarefa excluída com sucesso!",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
 module.exports = router;
